@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
-import type { SiteContentRow } from '@/types/database.types';
+import type { SiteContentRow, SiteContentRevisionRow } from '@/types/database.types';
 
 export async function getPublishedSiteContent<T>(sectionKey: string, fallback: T): Promise<T> {
   if (!isSupabaseConfigured()) {
@@ -13,9 +13,8 @@ export async function getPublishedSiteContent<T>(sectionKey: string, fallback: T
 
     const { data, error } = await supabase
       .from('site_content')
-      .select('content')
+      .select('content, status')
       .eq('section_key', sectionKey)
-      .eq('status', 'published')
       .single();
 
     if (error || !data || !data.content) {
@@ -40,4 +39,19 @@ export async function getAllSiteContent(): Promise<SiteContentRow[]> {
 
   if (error || !data) return [];
   return data as SiteContentRow[];
+}
+
+export async function getSectionRevisions(sectionKey: string): Promise<SiteContentRevisionRow[]> {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from('site_content_revisions')
+    .select('*')
+    .eq('section_key', sectionKey)
+    .order('created_at', { ascending: false })
+    .limit(10);
+
+  if (error || !data) return [];
+  return data as SiteContentRevisionRow[];
 }

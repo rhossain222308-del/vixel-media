@@ -69,5 +69,35 @@ export async function updateInquiryStatusAction(
   }
 
   revalidatePath('/dashboard');
+  revalidatePath('/dashboard/inquiries');
   return { success: true, message: `Inquiry status updated to ${newStatus}.` };
 }
+
+export async function deleteInquiryAction(inquiryId: string): Promise<ActionResponse> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: 'Supabase credentials not configured.' };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: 'Database client not available.' };
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: 'Unauthorized: Founder login required.' };
+  }
+
+  const { error } = await supabase.from('contact_inquiries').delete().eq('id', inquiryId);
+
+  if (error) {
+    console.error('Error deleting inquiry:', error);
+    return { success: false, error: `Failed to delete inquiry: ${error.message}` };
+  }
+
+  revalidatePath('/dashboard');
+  revalidatePath('/dashboard/inquiries');
+  return { success: true, message: 'Inquiry deleted successfully.' };
+}
+

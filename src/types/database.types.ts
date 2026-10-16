@@ -17,7 +17,7 @@ export interface Database {
           role: string;
           tagline: string;
           bio: string;
-          full_bio: Json;
+          full_bio: string;
           avatar_url: string;
           cover_url: string;
           contact_email: string;
@@ -40,7 +40,7 @@ export interface Database {
           role?: string;
           tagline?: string;
           bio?: string;
-          full_bio?: Json;
+          full_bio?: string;
           avatar_url?: string;
           cover_url?: string;
           contact_email?: string;
@@ -63,7 +63,7 @@ export interface Database {
           role?: string;
           tagline?: string;
           bio?: string;
-          full_bio?: Json;
+          full_bio?: string;
           avatar_url?: string;
           cover_url?: string;
           contact_email?: string;
@@ -105,6 +105,7 @@ export interface Database {
           metrics: Json;
           tools_used: Json;
           year: number;
+          published_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -131,6 +132,7 @@ export interface Database {
           metrics?: Json;
           tools_used?: Json;
           year?: number;
+          published_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -157,6 +159,7 @@ export interface Database {
           metrics?: Json;
           tools_used?: Json;
           year?: number;
+          published_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -167,8 +170,10 @@ export interface Database {
           id: string;
           section_key: string;
           content: Json;
+          draft_content: Json | null;
           status: 'draft' | 'published';
           updated_by: string | null;
+          published_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -176,8 +181,10 @@ export interface Database {
           id?: string;
           section_key: string;
           content?: Json;
+          draft_content?: Json | null;
           status?: 'draft' | 'published';
           updated_by?: string | null;
+          published_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -185,10 +192,42 @@ export interface Database {
           id?: string;
           section_key?: string;
           content?: Json;
+          draft_content?: Json | null;
           status?: 'draft' | 'published';
           updated_by?: string | null;
+          published_at?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      site_content_revisions: {
+        Row: {
+          id: string;
+          section_key: string;
+          content: Json;
+          created_by: string | null;
+          version_number: number;
+          change_summary: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          section_key: string;
+          content: Json;
+          created_by?: string | null;
+          version_number?: number;
+          change_summary?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          section_key?: string;
+          content?: Json;
+          created_by?: string | null;
+          version_number?: number;
+          change_summary?: string;
+          created_at?: string;
         };
         Relationships: [];
       };
@@ -209,6 +248,7 @@ export interface Database {
           features: Json;
           sort_order: number;
           is_published: boolean;
+          published_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -228,6 +268,7 @@ export interface Database {
           features?: Json;
           sort_order?: number;
           is_published?: boolean;
+          published_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -247,6 +288,7 @@ export interface Database {
           features?: Json;
           sort_order?: number;
           is_published?: boolean;
+          published_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -268,6 +310,7 @@ export interface Database {
           has_video_review: boolean;
           project_image_url: string;
           is_published: boolean;
+          published_at: string | null;
           sort_order: number;
           created_at: string;
           updated_at: string;
@@ -287,6 +330,7 @@ export interface Database {
           has_video_review?: boolean;
           project_image_url?: string;
           is_published?: boolean;
+          published_at?: string | null;
           sort_order?: number;
           created_at?: string;
           updated_at?: string;
@@ -306,6 +350,7 @@ export interface Database {
           has_video_review?: boolean;
           project_image_url?: string;
           is_published?: boolean;
+          published_at?: string | null;
           sort_order?: number;
           created_at?: string;
           updated_at?: string;
@@ -365,6 +410,7 @@ export interface Database {
 export type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 export type PortfolioProjectRow = Database['public']['Tables']['portfolio_projects']['Row'];
 export type SiteContentRow = Database['public']['Tables']['site_content']['Row'];
+export type SiteContentRevisionRow = Database['public']['Tables']['site_content_revisions']['Row'];
 export type ServiceRow = Database['public']['Tables']['services']['Row'];
 export type TestimonialRow = Database['public']['Tables']['testimonials']['Row'];
 export type ContactInquiryRow = Database['public']['Tables']['contact_inquiries']['Row'];

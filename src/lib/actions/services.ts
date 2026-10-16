@@ -51,6 +51,26 @@ export async function saveServiceAction(
   const sortOrder = parseInt((formData.get('sortOrder') as string) || '0', 10);
   const isPublished = formData.get('isPublished') === 'true';
 
+  let deliverables: string[] = [];
+  const rawDeliverables = formData.get('deliverables') as string;
+  if (rawDeliverables) {
+    try {
+      deliverables = JSON.parse(rawDeliverables);
+    } catch {
+      deliverables = rawDeliverables.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+  }
+
+  let platforms: string[] = [];
+  const rawPlatforms = formData.get('platforms') as string;
+  if (rawPlatforms) {
+    try {
+      platforms = JSON.parse(rawPlatforms);
+    } catch {
+      platforms = rawPlatforms.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+  }
+
   if (!title || !description) {
     return { success: false, error: 'Service title and description are required.' };
   }
@@ -70,6 +90,8 @@ export async function saveServiceAction(
         ideal_for: idealFor,
         image_url: imageUrl,
         sample_video_url: sampleVideoUrl,
+        deliverables,
+        platforms,
         sort_order: isNaN(sortOrder) ? 0 : sortOrder,
         is_published: isPublished,
         updated_at: new Date().toISOString(),
@@ -92,6 +114,8 @@ export async function saveServiceAction(
       ideal_for: idealFor,
       image_url: imageUrl,
       sample_video_url: sampleVideoUrl,
+      deliverables,
+      platforms,
       sort_order: isNaN(sortOrder) ? 0 : sortOrder,
       is_published: isPublished,
     });
@@ -104,6 +128,7 @@ export async function saveServiceAction(
 
   revalidatePath('/services');
   revalidatePath('/dashboard');
+  revalidatePath('/dashboard/services');
 
   return { success: true, message: 'Service saved successfully!' };
 }
@@ -136,6 +161,7 @@ export async function deleteServiceAction(serviceId: string): Promise<ActionResp
 
   revalidatePath('/services');
   revalidatePath('/dashboard');
+  revalidatePath('/dashboard/services');
 
   return { success: true, message: 'Service removed successfully.' };
 }

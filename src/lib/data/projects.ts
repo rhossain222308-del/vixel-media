@@ -145,3 +145,57 @@ export async function getFounderProjects(userId: string): Promise<PortfolioProje
 
   return data as PortfolioProjectRow[];
 }
+
+/**
+ * Fetch a single project by ID for editing, strictly checking ownership
+ */
+export async function getProjectById(
+  projectId: string,
+  userId: string
+): Promise<PortfolioProjectRow | null> {
+  if (!isSupabaseConfigured()) {
+    const p = sampleProjects.find((item) => item.id === projectId);
+    if (!p) return null;
+    return {
+      id: p.id,
+      owner_id: userId,
+      title: p.title,
+      slug: p.slug,
+      client: p.client,
+      description: p.description,
+      long_description: p.longDescription || '',
+      category: p.category,
+      category_label: p.categoryLabel,
+      deliverables: p.deliverables,
+      duration: p.duration,
+      aspect_ratio: p.aspectRatio,
+      thumbnail_url: p.thumbnailUrl,
+      video_url: p.videoUrl || '',
+      platform: 'YouTube',
+      has_playable_media: p.hasPlayableMedia,
+      featured: p.featured,
+      sort_order: 1,
+      status: 'published',
+      metrics: p.metrics || {},
+      tools_used: p.toolsUsed,
+      year: p.year,
+      published_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from('portfolio_projects')
+    .select('*')
+    .eq('id', projectId)
+    .eq('owner_id', userId)
+    .single();
+
+  if (error || !data) return null;
+  return data as PortfolioProjectRow;
+}
+

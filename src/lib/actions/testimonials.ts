@@ -90,6 +90,7 @@ export async function saveTestimonialAction(
 
   revalidatePath('/testimonials');
   revalidatePath('/dashboard');
+  revalidatePath('/dashboard/testimonials');
 
   return { success: true, message: 'Testimonial saved successfully!' };
 }
@@ -122,6 +123,7 @@ export async function deleteTestimonialAction(testimonialId: string): Promise<Ac
 
   revalidatePath('/testimonials');
   revalidatePath('/dashboard');
+  revalidatePath('/dashboard/testimonials');
 
   return { success: true, message: 'Testimonial removed successfully.' };
 }

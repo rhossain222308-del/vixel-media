@@ -40,6 +40,7 @@ export async function createProjectAction(
   }
 
   const title = (formData.get('title') as string)?.trim();
+  const rawSlug = (formData.get('slug') as string)?.trim();
   const rawCategory = (formData.get('category') as string)?.trim();
   const category = (['reels', 'long-form', 'ads', 'motion-graphics'].includes(rawCategory)
     ? rawCategory
@@ -47,37 +48,64 @@ export async function createProjectAction(
 
   const client = (formData.get('client') as string)?.trim() || '';
   const description = (formData.get('description') as string)?.trim() || '';
+  const longDescription = (formData.get('longDescription') as string)?.trim() || description;
   const videoUrl = (formData.get('videoUrl') as string)?.trim() || '';
   const thumbnailUrl = (formData.get('thumbnailUrl') as string)?.trim() || '';
   const platform = (formData.get('platform') as string)?.trim() || 'Vimeo';
   const duration = (formData.get('duration') as string)?.trim() || '';
+  const rawAspectRatio = (formData.get('aspectRatio') as string)?.trim();
+  const aspectRatio = (['16:9', '9:16', '1:1', '4:5'].includes(rawAspectRatio)
+    ? rawAspectRatio
+    : category === 'reels' ? '9:16' : '16:9') as '16:9' | '9:16' | '1:1' | '4:5';
+  const sortOrder = parseInt((formData.get('sortOrder') as string) || '0', 10);
   const rawStatus = (formData.get('status') as string)?.trim();
   const status = rawStatus === 'published' ? 'published' : 'draft';
   const featured = formData.get('featured') === 'true';
+
+  let deliverables: string[] = [];
+  const rawDeliverables = formData.get('deliverables') as string;
+  if (rawDeliverables) {
+    try {
+      deliverables = JSON.parse(rawDeliverables);
+    } catch {
+      deliverables = rawDeliverables.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+  }
 
   if (!title) {
     return { success: false, error: 'Project title is required.' };
   }
 
   const baseSlug = generateSlug(title);
-  const slug = `${baseSlug}-${Date.now().toString(36)}`;
+  const slug = rawSlug
+    ? generateSlug(rawSlug)
+    : `${baseSlug}-${Date.now().toString(36)}`;
 
   // Strict ownership assignment: owner_id is set to user.id, never trusted from client
-  const { error } = await supabase.from('portfolio_projects').insert({
-    owner_id: user.id,
-    title,
-    slug,
-    client,
-    description,
-    category,
-    video_url: videoUrl,
-    thumbnail_url: thumbnailUrl || 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80',
-    platform,
-    duration,
-    status,
-    featured,
-    has_playable_media: !!videoUrl,
-  });
+  const { error } = await supabase
+    .from('portfolio_projects')
+    .insert({
+      owner_id: user.id,
+      title,
+      slug,
+      client,
+      description,
+      long_description: longDescription,
+      category,
+      category_label: category.replace('-', ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      video_url: videoUrl,
+      thumbnail_url: thumbnailUrl || 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80',
+      platform,
+      duration,
+      aspect_ratio: aspectRatio,
+      sort_order: isNaN(sortOrder) ? 0 : sortOrder,
+      deliverables,
+      status,
+      featured,
+      has_playable_media: !!videoUrl,
+    })
+    .select('id, slug')
+    .single();
 
   if (error) {
     console.error('Error creating project:', error);
@@ -85,10 +113,14 @@ export async function createProjectAction(
   }
 
   revalidatePath('/dashboard');
+  revalidatePath('/dashboard/portfolio');
   revalidatePath('/work');
   revalidatePath('/portfolio/[slug]', 'page');
 
-  return { success: true, message: 'Project created successfully!' };
+  return { 
+    success: true, 
+    message: 'Project created successfully!',
+  };
 }
 
 /**
@@ -142,6 +174,7 @@ export async function updateProjectAction(
   }
 
   const title = (formData.get('title') as string)?.trim();
+  const rawSlug = (formData.get('slug') as string)?.trim();
   const rawCategory = (formData.get('category') as string)?.trim();
   const category = (['reels', 'long-form', 'ads', 'motion-graphics'].includes(rawCategory)
     ? rawCategory
@@ -149,35 +182,81 @@ export async function updateProjectAction(
 
   const client = (formData.get('client') as string)?.trim() || '';
   const description = (formData.get('description') as string)?.trim() || '';
+  const longDescription = (formData.get('longDescription') as string)?.trim() || description;
   const videoUrl = (formData.get('videoUrl') as string)?.trim() || '';
   const thumbnailUrl = (formData.get('thumbnailUrl') as string)?.trim() || '';
   const platform = (formData.get('platform') as string)?.trim() || 'Vimeo';
   const duration = (formData.get('duration') as string)?.trim() || '';
+  const rawAspectRatio = (formData.get('aspectRatio') as string)?.trim();
+  const aspectRatio = (['16:9', '9:16', '1:1', '4:5'].includes(rawAspectRatio)
+    ? rawAspectRatio
+    : category === 'reels' ? '9:16' : '16:9') as '16:9' | '9:16' | '1:1' | '4:5';
+  const sortOrder = parseInt((formData.get('sortOrder') as string) || '0', 10);
   const rawStatus = (formData.get('status') as string)?.trim();
   const status = rawStatus === 'published' ? 'published' : 'draft';
   const featured = formData.get('featured') === 'true';
+
+  let deliverables: string[] = [];
+  const rawDeliverables = formData.get('deliverables') as string;
+  if (rawDeliverables) {
+    try {
+      deliverables = JSON.parse(rawDeliverables);
+    } catch {
+      deliverables = rawDeliverables.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+  }
 
   if (!title) {
     return { success: false, error: 'Project title is required.' };
   }
 
   // 2. Perform update with strict owner_id check (never modifying owner_id)
+  const updateData: {
+    title: string;
+    client: string;
+    description: string;
+    long_description: string;
+    category: 'reels' | 'long-form' | 'ads' | 'motion-graphics';
+    category_label: string;
+    video_url: string;
+    thumbnail_url: string;
+    platform: string;
+    duration: string;
+    aspect_ratio: '16:9' | '9:16' | '1:1' | '4:5';
+    sort_order: number;
+    deliverables: string[];
+    status: 'draft' | 'published';
+    featured: boolean;
+    has_playable_media: boolean;
+    updated_at: string;
+    slug?: string;
+  } = {
+    title,
+    client,
+    description,
+    long_description: longDescription,
+    category,
+    category_label: category.replace('-', ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+    video_url: videoUrl,
+    thumbnail_url: thumbnailUrl,
+    platform,
+    duration,
+    aspect_ratio: aspectRatio,
+    sort_order: isNaN(sortOrder) ? 0 : sortOrder,
+    deliverables,
+    status,
+    featured,
+    has_playable_media: !!videoUrl,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (rawSlug) {
+    updateData.slug = generateSlug(rawSlug);
+  }
+
   const { error } = await supabase
     .from('portfolio_projects')
-    .update({
-      title,
-      client,
-      description,
-      category,
-      video_url: videoUrl,
-      thumbnail_url: thumbnailUrl,
-      platform,
-      duration,
-      status,
-      featured,
-      has_playable_media: !!videoUrl,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updateData)
     .eq('id', projectId)
     .eq('owner_id', user.id);
 
@@ -187,6 +266,7 @@ export async function updateProjectAction(
   }
 
   revalidatePath('/dashboard');
+  revalidatePath('/dashboard/portfolio');
   revalidatePath('/work');
   revalidatePath('/portfolio/[slug]', 'page');
 
