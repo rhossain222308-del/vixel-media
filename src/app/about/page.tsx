@@ -13,14 +13,15 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { FounderCard } from '@/components/founders/FounderCard';
-import { sampleFounders } from '@/data/founders';
+import { getPublishedFounders } from '@/lib/data/profiles';
 
 export const metadata: Metadata = {
   title: 'About Us | Vixel Media',
   description: 'Learn the story, vision, and core philosophy behind Vixel Media — a creative agency founded on narrative rhythm and visual precision.',
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const founders = await getPublishedFounders();
   const philosophies = [
     {
       title: 'Creativity',
@@ -164,7 +165,7 @@ export default function AboutPage() {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {sampleFounders.map((founder) => (
+          {founders.map((founder) => (
             <FounderCard key={founder.id} founder={founder} />
           ))}
         </div>

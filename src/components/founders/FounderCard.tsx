@@ -21,6 +21,7 @@ export const FounderCard: React.FC<FounderCardProps> = ({ founder }) => {
             src={founder.coverUrl}
             alt=""
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover opacity-30 group-hover:scale-105 transition-transform duration-700"
           />
         )}
@@ -33,6 +34,7 @@ export const FounderCard: React.FC<FounderCardProps> = ({ founder }) => {
               src={founder.avatarUrl}
               alt={founder.name}
               fill
+              sizes="96px"
               className="object-cover"
             />
           </div>

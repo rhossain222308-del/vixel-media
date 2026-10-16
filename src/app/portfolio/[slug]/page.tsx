@@ -1,8 +1,9 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getFounderBySlug, sampleFounders } from '@/data/founders';
-import { getProjectsByFounder } from '@/data/projects';
+import { getPublishedFounderBySlug } from '@/lib/data/profiles';
+import { getPublishedProjectsByFounder } from '@/lib/data/projects';
+import { sampleFounders } from '@/data/founders';
 import { PortfolioDetailView } from './PortfolioDetailView';
 
 interface PageProps {
@@ -17,7 +18,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const founder = getFounderBySlug(slug);
+  const founder = await getPublishedFounderBySlug(slug);
 
   if (!founder) {
     return {
@@ -33,13 +34,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function FounderPortfolioPage({ params }: PageProps) {
   const { slug } = await params;
-  const founder = getFounderBySlug(slug);
+  const founder = await getPublishedFounderBySlug(slug);
 
   if (!founder) {
     notFound();
   }
 
-  const founderProjects = getProjectsByFounder(founder.id);
+  const founderProjects = await getPublishedProjectsByFounder(founder.id);
 
   return <PortfolioDetailView founder={founder} projects={founderProjects} />;
 }

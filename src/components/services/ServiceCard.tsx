@@ -27,6 +27,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
           src={service.thumbnailUrl}
           alt={service.title}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover opacity-40 group-hover:scale-105 transition-transform duration-700"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#14141A] via-[#14141A]/50 to-transparent" />

@@ -4,9 +4,11 @@ import React, { useState } from 'react';
 import { 
   Send, 
   CheckCircle2, 
-  Sparkles
+  Sparkles,
+  AlertCircle
 } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { submitInquiryAction } from '@/lib/actions/inquiries';
 
 interface ContactFormProps {
   initialService?: string;
@@ -21,10 +23,12 @@ export const ContactForm: React.FC<ContactFormProps> = ({ initialService = '' })
     budget: '$3,000 - $7,500',
     description: '',
     timeline: 'Within 2-4 weeks',
+    honeypot: '',
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const services = [
     'Video Editing',
@@ -44,15 +48,34 @@ export const ContactForm: React.FC<ContactFormProps> = ({ initialService = '' })
     'Undetermined / Discussion Needed'
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage(null);
 
-    // Simulate clean staging submission
-    setTimeout(() => {
+    const data = new FormData();
+    data.append('name', formData.name);
+    data.append('email', formData.email);
+    data.append('company', formData.company);
+    data.append('service', formData.service);
+    data.append('budget', formData.budget);
+    data.append('timeline', formData.timeline);
+    data.append('message', formData.description);
+    data.append('website_url', formData.honeypot); // Bot honeypot trap
+
+    try {
+      const response = await submitInquiryAction(null, data);
+      if (response.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMessage(response.error || 'Failed to submit inquiry. Please try again.');
+      }
+    } catch (err) {
+      console.error('Submission failed:', err);
+      setErrorMessage('An unexpected error occurred. Please try again or reach out via email.');
+    } finally {
       setIsSubmitting(false);
-      setSubmitted(true);
-    }, 800);
+    }
   };
 
   return (
@@ -61,9 +84,16 @@ export const ContactForm: React.FC<ContactFormProps> = ({ initialService = '' })
       <div className="mb-8 p-3.5 rounded-2xl bg-violet-950/40 border border-violet-500/20 flex items-start gap-3">
         <Sparkles className="w-4 h-4 text-violet-400 mt-0.5 shrink-0" />
         <p className="text-xs text-gray-300 leading-relaxed">
-          <strong className="text-white">Inquiry Pipeline Staging:</strong> Submitting this form tests client-side validation and architecture. In Phase 2, entries will stream directly into the Supabase database and trigger instant email/Slack notifications.
+          <strong className="text-white">Secure Backend Pipeline:</strong> Submissions are processed through server-side validation, rate limiting, and honeypot protection, directly syncing with Supabase PostgreSQL and Row Level Security.
         </p>
       </div>
+
+      {errorMessage && (
+        <div className="mb-6 p-4 rounded-xl bg-red-950/40 border border-red-500/30 flex items-center gap-3 text-red-300 text-sm">
+          <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
 
       {submitted ? (
         <div className="py-12 px-4 text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
@@ -100,15 +130,30 @@ export const ContactForm: React.FC<ContactFormProps> = ({ initialService = '' })
                   budget: '$3,000 - $7,500',
                   description: '',
                   timeline: 'Within 2-4 weeks',
+                  honeypot: '',
                 });
               }}
             >
-              Submit Another Test Inquiry
+              Submit Another Inquiry
             </Button>
           </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Honeypot field to trap spam bots */}
+          <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
+            <label htmlFor="website_url">Website URL</label>
+            <input
+              id="website_url"
+              name="website_url"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={formData.honeypot}
+              onChange={(e) => setFormData({ ...formData, honeypot: e.target.value })}
+            />
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Name */}
             <div>

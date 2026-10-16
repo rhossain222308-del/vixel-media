@@ -8,7 +8,8 @@ import {
   X, 
   Film, 
   ChevronDown, 
-  ArrowRight 
+  ArrowRight,
+  Lock 
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 
@@ -147,6 +148,14 @@ export const Navbar: React.FC = () => {
 
         {/* Action Button & Mobile Menu Toggle */}
         <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium text-gray-300 hover:text-white transition-colors border border-white/5 hover:border-violet-500/30"
+          >
+            <Lock className="w-3.5 h-3.5 text-violet-400" />
+            <span>Studio Desk</span>
+          </Link>
+
           <Button
             href="/contact"
             variant="primary"
@@ -208,6 +217,13 @@ export const Navbar: React.FC = () => {
             </Link>
 
             <div className="pt-4 mt-2 border-t border-white/10 flex flex-col gap-2">
+              <Link
+                href="/dashboard"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300 hover:text-white border border-white/10 transition-colors"
+              >
+                <Lock className="w-3.5 h-3.5 text-violet-400" />
+                <span>Founder Studio Portal</span>
+              </Link>
               <Button href="/contact" variant="primary" size="md" className="w-full">
                 Get a Quote
               </Button>

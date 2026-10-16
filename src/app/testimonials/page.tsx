@@ -10,14 +10,16 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { sampleTestimonials } from '@/data/testimonials';
+import { getPublishedTestimonials } from '@/lib/data/testimonials';
 
 export const metadata: Metadata = {
   title: 'Client Reviews & Testimonials | Vixel Media',
   description: 'Sample client testimonials, video review placeholders, and case study impact metrics for Vixel Media.',
 };
 
-export default function TestimonialsPage() {
+export default async function TestimonialsPage() {
+  const testimonials = await getPublishedTestimonials();
+
   return (
     <div className="py-12 sm:py-16 md:py-24">
       {/* Header */}
@@ -42,7 +44,7 @@ export default function TestimonialsPage() {
       {/* Testimonials Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {sampleTestimonials.map((item) => (
+          {testimonials.map((item) => (
             <div
               key={item.id}
               className="p-8 sm:p-10 rounded-3xl bg-[#14141B] border border-white/10 hover:border-violet-500/30 transition-all flex flex-col justify-between relative group"

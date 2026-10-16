@@ -9,14 +9,16 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { agencyServices } from '@/data/services';
+import { getPublishedServices } from '@/lib/data/services';
 
 export const metadata: Metadata = {
   title: 'Post-Production Services | Vixel Media',
   description: 'Detailed capabilities for YouTube video editing, high-retention vertical reels, 3D map animations, motion graphics, and brand films.',
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getPublishedServices();
+
   return (
     <div className="py-12 sm:py-16 md:py-24">
       {/* Header */}
@@ -34,7 +36,7 @@ export default function ServicesPage() {
 
       {/* Services Detailed List */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24 space-y-16 sm:space-y-24">
-        {agencyServices.map((service, index) => {
+        {services.map((service, index) => {
           const isEven = index % 2 === 1;
 
           return (
