@@ -26,12 +26,23 @@ interface HomeClientViewProps {
   featuredProjects: Project[];
   services: Service[];
   founders: Founder[];
+  heroContent?: {
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    primaryCtaLabel?: string;
+    primaryCtaLink?: string;
+    secondaryCtaLabel?: string;
+    secondaryCtaLink?: string;
+    videoReelUrl?: string;
+  };
 }
 
 export function HomeClientView({
   featuredProjects,
   services,
   founders,
+  heroContent,
 }: HomeClientViewProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -87,36 +98,42 @@ export function HomeClientView({
             {/* Studio Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-950/60 border border-violet-500/30 text-violet-300 text-xs font-medium shadow-sm">
               <span className="w-2 h-2 rounded-full bg-violet-400 animate-ping" />
-              <span>VIXEL MEDIA STUDIO • HIGH-IMPACT POST-PRODUCTION</span>
+              <span>{heroContent?.badge || 'VIXEL MEDIA STUDIO • HIGH-IMPACT POST-PRODUCTION'}</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.08]">
-              Creative That <span className="text-gradient">Converts.</span>
+              {heroContent?.title ? (
+                <span>{heroContent.title}</span>
+              ) : (
+                <>
+                  Creative That <span className="text-gradient">Converts.</span>
+                </>
+              )}
             </h1>
 
             {/* Supporting Text */}
             <p className="text-lg sm:text-xl md:text-2xl text-gray-300 font-normal max-w-2xl mx-auto leading-relaxed">
-              We craft high-impact videos, visuals, and digital experiences for brands and creators.
+              {heroContent?.subtitle || 'We craft high-impact videos, visuals, and digital experiences for brands and creators.'}
             </p>
 
             {/* CTA Buttons */}
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
-                href="/work"
+                href={heroContent?.primaryCtaLink || '/work'}
                 variant="primary"
                 size="lg"
                 icon={<ArrowRight className="w-4 h-4" />}
               >
-                View Our Work
+                {heroContent?.primaryCtaLabel || 'View Our Work'}
               </Button>
               <Button
-                href="/contact"
+                href={heroContent?.secondaryCtaLink || '/contact'}
                 variant="secondary"
                 size="lg"
                 icon={<Sparkles className="w-4 h-4 text-violet-400" />}
               >
-                Get a Quote
+                {heroContent?.secondaryCtaLabel || 'Get a Quote'}
               </Button>
             </div>
           </div>

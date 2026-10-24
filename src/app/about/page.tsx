@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { FounderCard } from '@/components/founders/FounderCard';
 import { getPublishedFounders } from '@/lib/data/profiles';
+import { getPublishedSiteContent } from '@/lib/data/siteContent';
 
 export const metadata: Metadata = {
   title: 'About Us | Vixel Media',
@@ -21,7 +22,15 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const founders = await getPublishedFounders();
+  const [founders, storyVision] = await Promise.all([
+    getPublishedFounders(),
+    getPublishedSiteContent('story_vision', {
+      storyTitle: 'From Solo Timelines to a Unified Creative Studio',
+      storyBody: '',
+      mission: 'To liberate creators and brand leaders from editorial friction by providing an agile, dependable, and aesthetically uncompromising video production engine that turns raw ideas into viral, high-converting digital assets.',
+      vision: 'To redefine post-production as a strategic growth asset. We envision a creator ecosystem where every ambitious brand commands the production fidelity previously reserved for high-budget television networks.',
+    }),
+  ]);
   const philosophies = [
     {
       title: 'Creativity',
@@ -72,19 +81,27 @@ export default async function AboutPage() {
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">
-            From Solo Timelines to a Unified Creative Studio
+            {storyVision.storyTitle || 'From Solo Timelines to a Unified Creative Studio'}
           </h2>
 
           <div className="space-y-4 text-sm sm:text-base text-gray-300 leading-relaxed">
-            <p>
-              In an attention economy where billions of hours of video are uploaded every single week, having clean footage is no longer enough. The difference between an average video and one that converts viewers into lifelong customers or devoted subscribers is pacing, rhythm, and visual disruption.
-            </p>
-            <p>
-              Co-founders <strong className="text-white">Alex Vance</strong> (cinematic storytelling & long-form editorial) and <strong className="text-white">Marcus Chen</strong> (motion design, 3D cartography, and high-velocity short-form hooks) combined their complimentary skillsets to form Vixel Media.
-            </p>
-            <p>
-              Our studio bridges the gap between Hollywood-grade post-production principles and algorithmic audience retention. Today, we partner with top YouTube creators, venture-backed startups, and visionary brands to engineer content that not only looks stunning, but delivers measurable watch time, engagement, and conversion.
-            </p>
+            {storyVision.storyBody ? (
+              storyVision.storyBody.split('\n\n').map((paragraph: string, idx: number) => (
+                <p key={idx}>{paragraph}</p>
+              ))
+            ) : (
+              <>
+                <p>
+                  In an attention economy where billions of hours of video are uploaded every single week, having clean footage is no longer enough. The difference between an average video and one that converts viewers into lifelong customers or devoted subscribers is pacing, rhythm, and visual disruption.
+                </p>
+                <p>
+                  Co-founders <strong className="text-white">Alex Vance</strong> (cinematic storytelling & long-form editorial) and <strong className="text-white">Marcus Chen</strong> (motion design, 3D cartography, and high-velocity short-form hooks) combined their complimentary skillsets to form Vixel Media.
+                </p>
+                <p>
+                  Our studio bridges the gap between Hollywood-grade post-production principles and algorithmic audience retention. Today, we partner with top YouTube creators, venture-backed startups, and visionary brands to engineer content that not only looks stunning, but delivers measurable watch time, engagement, and conversion.
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -100,7 +117,7 @@ export default async function AboutPage() {
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">Our Vision</h3>
               <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
-                To redefine post-production as a strategic growth asset. We envision a creator ecosystem where every ambitious brand commands the production fidelity previously reserved for high-budget television networks.
+                {storyVision.vision || 'To redefine post-production as a strategic growth asset. We envision a creator ecosystem where every ambitious brand commands the production fidelity previously reserved for high-budget television networks.'}
               </p>
             </div>
             <div className="mt-8 pt-4 border-t border-white/5 text-xs text-violet-400 font-mono">
@@ -116,7 +133,7 @@ export default async function AboutPage() {
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">Our Mission</h3>
               <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
-                To liberate creators and brand leaders from editorial friction by providing an agile, dependable, and aesthetically uncompromising video production engine that turns raw ideas into viral, high-converting digital assets.
+                {storyVision.mission || 'To liberate creators and brand leaders from editorial friction by providing an agile, dependable, and aesthetically uncompromising video production engine that turns raw ideas into viral, high-converting digital assets.'}
               </p>
             </div>
             <div className="mt-8 pt-4 border-t border-white/5 text-xs text-purple-400 font-mono">

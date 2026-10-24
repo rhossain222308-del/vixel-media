@@ -5,15 +5,11 @@ import {
   Mail, 
   Search, 
   Trash2, 
-  ExternalLink, 
-  Clock, 
   DollarSign, 
   Briefcase, 
   CheckCircle2, 
   AlertCircle,
-  Building,
-  User,
-  Filter
+  User
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -34,7 +30,7 @@ export function InquiriesManagerClient({
   const [deleteTarget, setDeleteTarget] = useState<ContactInquiryRow | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const filtered = inquiries.filter((inq) => {
     const matchesSearch =

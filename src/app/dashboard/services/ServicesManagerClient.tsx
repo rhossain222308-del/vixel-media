@@ -2,7 +2,6 @@
 
 import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { 
   Layers, 
   Plus, 
@@ -11,16 +10,11 @@ import {
   CheckCircle2, 
   AlertCircle, 
   ExternalLink,
-  Sparkles,
   Save,
   X,
-  Eye,
-  EyeOff,
-  Clock,
-  ArrowUpDown
+  Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 import { ConfirmModal } from '@/components/dashboard/ConfirmModal';
 import { ImageUpload } from '@/components/dashboard/ImageUpload';
 import { saveServiceAction, deleteServiceAction } from '@/lib/actions/services';
@@ -328,6 +322,20 @@ export function ServicesManagerClient({
                         +{deliverablesList.length - 4} more
                       </span>
                     )}
+                  </div>
+                )}
+
+                {/* Platforms preview */}
+                {platformsList.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {platformsList.map((p, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-0.5 rounded-md bg-violet-950/40 border border-violet-500/20 text-violet-300 text-[10px] font-mono"
+                      >
+                        {p}
+                      </span>
+                    ))}
                   </div>
                 )}
               </div>

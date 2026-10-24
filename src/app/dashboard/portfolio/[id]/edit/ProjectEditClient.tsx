@@ -13,8 +13,7 @@ import {
   Trash2,
   Plus,
   X,
-  Sparkles,
-  ExternalLink
+  Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -26,12 +25,11 @@ import type { PortfolioProjectRow } from '@/types/database.types';
 
 interface ProjectEditClientProps {
   project: PortfolioProjectRow;
-  userId: string;
+  userId?: string;
 }
 
 export function ProjectEditClient({
   project,
-  userId,
 }: ProjectEditClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();

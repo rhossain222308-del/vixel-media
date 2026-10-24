@@ -10,15 +10,11 @@ import {
   CheckCircle2, 
   AlertCircle, 
   Play, 
-  Image as ImageIcon,
   Plus,
   X,
-  Sparkles,
-  Eye,
-  EyeOff
+  Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 import { ImageUpload } from '@/components/dashboard/ImageUpload';
 import { VideoEmbedPreview } from '@/components/dashboard/VideoEmbedPreview';
 import { createProjectAction } from '@/lib/actions/projects';

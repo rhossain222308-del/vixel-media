@@ -4,8 +4,6 @@ import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { 
   User, 
-  Mail, 
-  MapPin, 
   Briefcase, 
   Sparkles, 
   CheckCircle2, 
@@ -14,12 +12,10 @@ import {
   ExternalLink,
   Plus,
   X,
-  Globe,
   Eye,
   EyeOff
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 import { ImageUpload } from '@/components/dashboard/ImageUpload';
 import { updateFounderProfileAction } from '@/lib/actions/profile';
 import type { ProfileRow } from '@/types/database.types';

@@ -11,13 +11,21 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { getPublishedSiteContent } from '@/lib/data/siteContent';
 
 export const metadata: Metadata = {
   title: 'Custom Pricing & Scoping | Vixel Media',
   description: 'Understand how Vixel Media scopes and estimates bespoke video editing, 3D map animations, and recurring creator pipelines.',
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const pricingContent = await getPublishedSiteContent('pricing', {
+    headline: '',
+    subheadline: "We don't force your creative vision into rigid, generic subscription boxes. We provide tailored quotations based on your exact footage, editorial complexity, and delivery goals.",
+    guarantee: '100% Satisfaction Guarantee: Unlimited collaborative revisions until the final render is flawless.',
+    turnaroundNotice: 'Standard 48-72 hour delivery on weekly sprint packages.',
+    ctaLabel: 'Request Pricing Quote',
+  });
   const scopingFactors = [
     {
       title: 'Raw Footage Volume & Multi-Cam Ratio',
@@ -94,10 +102,16 @@ export default function PricingPage() {
           Transparent Scoping
         </Badge>
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
-          Every Project is <span className="text-gradient">Unique.</span>
+          {pricingContent?.headline ? (
+            <span>{pricingContent.headline}</span>
+          ) : (
+            <>
+              Every Project is <span className="text-gradient">Unique.</span>
+            </>
+          )}
         </h1>
         <p className="mt-4 text-base sm:text-lg text-gray-300 leading-relaxed">
-          We don&apos;t force your creative vision into rigid, generic subscription boxes. We provide tailored quotations based on your exact footage, editorial complexity, and delivery goals.
+          {pricingContent?.subheadline || "We don't force your creative vision into rigid, generic subscription boxes. We provide tailored quotations based on your exact footage, editorial complexity, and delivery goals."}
         </p>
 
         {/* Primary CTA button as required by prompt */}
@@ -108,7 +122,7 @@ export default function PricingPage() {
             size="lg"
             icon={<ArrowRight className="w-4 h-4" />}
           >
-            Request Pricing
+            {pricingContent?.ctaLabel || 'Request Pricing'}
           </Button>
           <Button
             href="/services"
@@ -210,10 +224,13 @@ export default function PricingPage() {
 
           <div className="mt-10 p-5 rounded-2xl bg-violet-950/40 border border-violet-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-xs text-violet-200">
-              Ready to receive a detailed breakdown within 24 business hours?
+              {pricingContent?.guarantee || 'Ready to receive a detailed breakdown within 24 business hours?'}
+              {pricingContent?.turnaroundNotice && (
+                <span className="block mt-1 text-gray-400">{pricingContent.turnaroundNotice}</span>
+              )}
             </div>
             <Button href="/contact" variant="primary" size="sm">
-              Request Pricing Quote
+              {pricingContent?.ctaLabel || 'Request Pricing Quote'}
             </Button>
           </div>
         </div>

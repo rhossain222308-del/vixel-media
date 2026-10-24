@@ -14,11 +14,9 @@ import {
   Star,
   Save,
   X,
-  Quote,
   TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 import { ConfirmModal } from '@/components/dashboard/ConfirmModal';
 import { ImageUpload } from '@/components/dashboard/ImageUpload';
 import { saveTestimonialAction, deleteTestimonialAction } from '@/lib/actions/testimonials';

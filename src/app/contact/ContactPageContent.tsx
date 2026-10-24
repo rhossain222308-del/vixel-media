@@ -14,7 +14,19 @@ import { YoutubeIcon, InstagramIcon, TwitterIcon, LinkedinIcon } from '@/compone
 import { ContactForm } from '@/components/contact/ContactForm';
 import { Badge } from '@/components/ui/Badge';
 
-export function ContactPageContent() {
+interface ContactPageContentProps {
+  contactInfo?: {
+    email?: string;
+    whatsapp?: string;
+    location?: string;
+    instagram?: string;
+    youtube?: string;
+    linkedin?: string;
+    twitter?: string;
+  };
+}
+
+export function ContactPageContent({ contactInfo }: ContactPageContentProps) {
   const searchParams = useSearchParams();
   const preselectedService = searchParams.get('service') || '';
   const preselectedFounder = searchParams.get('founder') || '';
@@ -66,7 +78,7 @@ export function ContactPageContent() {
               <div className="space-y-4">
                 {/* Email */}
                 <a
-                  href="mailto:hello@vixelmedia.demo"
+                  href={`mailto:${contactInfo?.email || 'contact@vixelmedia.com'}`}
                   className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/5 hover:border-violet-500/30 hover:bg-white/10 transition-colors group"
                 >
                   <div className="p-2.5 rounded-xl bg-violet-600/20 text-violet-400 group-hover:scale-110 transition-transform">
@@ -74,14 +86,14 @@ export function ContactPageContent() {
                   </div>
                   <div>
                     <div className="text-xs text-gray-400">Direct Inquiries</div>
-                    <div className="text-sm font-semibold text-white">hello@vixelmedia.demo</div>
+                    <div className="text-sm font-semibold text-white">{contactInfo?.email || 'contact@vixelmedia.com'}</div>
                     <div className="text-[11px] text-gray-500 mt-0.5">Average response: &lt; 4 hours</div>
                   </div>
                 </a>
 
                 {/* WhatsApp */}
                 <a
-                  href="https://whatsapp.com"
+                  href={contactInfo?.whatsapp ? `https://wa.me/${contactInfo.whatsapp.replace(/[^0-9]/g, '')}` : 'https://whatsapp.com'}
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-white/10 transition-colors group"
@@ -91,7 +103,7 @@ export function ContactPageContent() {
                   </div>
                   <div>
                     <div className="text-xs text-gray-400">Instant Chat & Production Desk</div>
-                    <div className="text-sm font-semibold text-white">WhatsApp Studio Desk</div>
+                    <div className="text-sm font-semibold text-white">{contactInfo?.whatsapp || 'WhatsApp Studio Desk'}</div>
                     <div className="text-[11px] text-gray-500 mt-0.5">Click to chat with editorial leads</div>
                   </div>
                 </a>
@@ -103,7 +115,7 @@ export function ContactPageContent() {
                   </div>
                   <div>
                     <div className="text-xs text-gray-400">Locations & Studio Operations</div>
-                    <div className="text-sm font-semibold text-white">Los Angeles, CA & Remote Global</div>
+                    <div className="text-sm font-semibold text-white">{contactInfo?.location || 'Los Angeles, CA & Remote Global'}</div>
                     <div className="text-[11px] text-gray-500 mt-0.5">Working across PST, EST & European timezones</div>
                   </div>
                 </div>
@@ -116,7 +128,7 @@ export function ContactPageContent() {
                 </div>
                 <div className="flex items-center gap-2.5">
                   <a
-                    href="https://youtube.com"
+                    href={contactInfo?.youtube || 'https://youtube.com'}
                     target="_blank"
                     rel="noreferrer"
                     aria-label="YouTube"
@@ -125,7 +137,7 @@ export function ContactPageContent() {
                     <YoutubeIcon size={16} />
                   </a>
                   <a
-                    href="https://instagram.com"
+                    href={contactInfo?.instagram || 'https://instagram.com'}
                     target="_blank"
                     rel="noreferrer"
                     aria-label="Instagram"
@@ -134,7 +146,7 @@ export function ContactPageContent() {
                     <InstagramIcon size={16} />
                   </a>
                   <a
-                    href="https://x.com"
+                    href={contactInfo?.twitter || 'https://x.com'}
                     target="_blank"
                     rel="noreferrer"
                     aria-label="X"
@@ -143,7 +155,7 @@ export function ContactPageContent() {
                     <TwitterIcon size={14} />
                   </a>
                   <a
-                    href="https://linkedin.com"
+                    href={contactInfo?.linkedin || 'https://linkedin.com'}
                     target="_blank"
                     rel="noreferrer"
                     aria-label="LinkedIn"

@@ -3,19 +3,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { 
-  Settings, 
   Database, 
   ShieldCheck, 
-  Lock, 
   Key, 
   HardDrive, 
   UserCheck, 
-  ExternalLink,
   CheckCircle2,
   AlertCircle,
-  Copy,
-  Terminal,
-  HelpCircle
+  Copy
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';

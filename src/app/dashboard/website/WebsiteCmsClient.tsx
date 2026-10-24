@@ -3,7 +3,6 @@
 import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { 
-  Globe, 
   Save, 
   UploadCloud, 
   CheckCircle2, 
@@ -13,19 +12,14 @@ import {
   ExternalLink,
   Sparkles,
   Layers,
-  ShieldCheck,
   Building,
   DollarSign,
   Phone,
   Film,
-  Plus,
-  Trash2,
-  Clock,
-  ArrowRight
+  Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { ConfirmModal } from '@/components/dashboard/ConfirmModal';
 import { 
   saveSiteContentDraftAction, 
   publishSiteContentAction, 
@@ -37,7 +31,7 @@ import type { SiteContentRow, SiteContentRevisionRow } from '@/types/database.ty
 interface WebsiteCmsClientProps {
   initialContent: SiteContentRow[];
   revisions: Record<string, SiteContentRevisionRow[]>;
-  userId: string;
+  userId?: string;
 }
 
 type SectionKey = 
@@ -51,7 +45,6 @@ type SectionKey =
 export function WebsiteCmsClient({
   initialContent,
   revisions,
-  userId,
 }: WebsiteCmsClientProps) {
   const [activeSection, setActiveSection] = useState<SectionKey>('hero');
   const [isPending, startTransition] = useTransition();
