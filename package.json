@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "npx tsx scripts/test-permissions-and-workflows.ts && npx tsx scripts/verify-backend.ts",
+    "test:security": "npx tsx scripts/test-permissions-and-workflows.ts",
+    "test:backend": "npx tsx scripts/verify-backend.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

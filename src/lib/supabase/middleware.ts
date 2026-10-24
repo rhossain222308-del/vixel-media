@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import type { Database } from '@/types/database.types';
 import { isSupabaseConfigured } from './config';
+import { sanitizeRedirectUrl } from '@/lib/security';
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
@@ -55,8 +56,9 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (isAuthRoute && user) {
-    const returnTo = request.nextUrl.searchParams.get('returnTo') || '/dashboard';
-    return NextResponse.redirect(new URL(returnTo, request.url));
+    const rawReturnTo = request.nextUrl.searchParams.get('returnTo');
+    const safeReturnTo = sanitizeRedirectUrl(rawReturnTo);
+    return NextResponse.redirect(new URL(safeReturnTo, request.url));
   }
 
   return response;

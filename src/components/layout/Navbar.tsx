@@ -34,6 +34,10 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  if (pathname.startsWith('/dashboard')) {
+    return null;
+  }
+
   const navLinks = [
     { name: 'Work', href: '/work' },
     { name: 'Services', href: '/services' },

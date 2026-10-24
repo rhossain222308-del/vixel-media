@@ -11,11 +11,10 @@ import {
   Maximize, 
   Film, 
   CheckCircle, 
-  ArrowRight,
-  AlertCircle
+  ArrowRight
 } from 'lucide-react';
-import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
+import { parseVideoUrl } from '@/lib/video';
 
 interface VideoPlayerModalProps {
   project: Project | null;
@@ -38,6 +37,7 @@ const VideoPlayerModalContent: React.FC<VideoPlayerModalContentProps> = ({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [videoError, setVideoError] = useState(false);
+  const parsed = project.videoUrl ? parseVideoUrl(project.videoUrl) : null;
 
   // Close on ESC key
   useEffect(() => {
@@ -149,7 +149,9 @@ const VideoPlayerModalContent: React.FC<VideoPlayerModalContentProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            <Badge variant="sample" size="sm">Staged Project</Badge>
+            <span className="px-2.5 py-0.5 rounded-full bg-violet-600/20 text-violet-300 text-xs font-mono font-medium border border-violet-500/30">
+              {project.categoryLabel}
+            </span>
             <button
               onClick={onClose}
               aria-label="Close modal"
@@ -162,11 +164,24 @@ const VideoPlayerModalContent: React.FC<VideoPlayerModalContentProps> = ({
 
         {/* Media / Video Stage */}
         <div className="relative flex-1 min-h-[280px] sm:min-h-[420px] max-h-[58vh] bg-black flex items-center justify-center overflow-hidden">
-          {project.hasPlayableMedia && project.videoUrl && !videoError ? (
+          {parsed?.isValid && (parsed.type === 'youtube' || parsed.type === 'vimeo') && parsed.embedUrl ? (
+            /* YouTube / Vimeo Embedded Stream */
+            <div className={`relative w-full h-full aspect-video flex items-center justify-center ${isVertical ? 'max-w-xs sm:max-w-sm mx-auto' : ''}`}>
+              <iframe
+                src={parsed.embedUrl}
+                title={project.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
+                className="w-full h-full border-0"
+              />
+            </div>
+          ) : parsed?.isValid && parsed.type === 'direct' && !videoError ? (
+            /* Direct MP4 / WebM Player */
             <div className={`relative w-full h-full flex items-center justify-center ${isVertical ? 'max-w-xs sm:max-w-sm mx-auto' : ''}`}>
               <video
                 ref={videoRef}
-                src={project.videoUrl}
+                src={parsed.embedUrl || project.videoUrl}
                 poster={project.thumbnailUrl}
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
@@ -245,16 +260,16 @@ const VideoPlayerModalContent: React.FC<VideoPlayerModalContentProps> = ({
                 <Film className="w-8 h-8 sm:w-10 sm:h-10 opacity-90" />
               </div>
 
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs font-medium mb-3">
-                <AlertCircle className="w-3.5 h-3.5" />
-                <span>Media Staged For Production</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-950/40 border border-violet-500/30 text-violet-300 text-xs font-medium mb-3">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Showcase Portfolio Asset</span>
               </div>
 
               <h4 className="text-xl sm:text-2xl font-bold text-white max-w-lg mb-2">
-                Sample Showcase Asset
+                {project.title}
               </h4>
               <p className="text-sm sm:text-base text-gray-400 max-w-md mx-auto mb-6 leading-relaxed">
-                This project demonstrates agency portfolio structuring and metadata. The full 4K master playback file will be linked via the Supabase admin CMS.
+                {project.description}
               </p>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg w-full mb-6 text-left">

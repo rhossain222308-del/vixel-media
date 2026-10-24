@@ -55,10 +55,7 @@ export function WorkClientView({ initialProjects }: WorkClientViewProps) {
 
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <Badge variant="purple">Agency Catalog</Badge>
-          <Badge variant="sample" size="sm">Live Connected / Staged</Badge>
-        </div>
+        <Badge variant="purple" className="mb-3">Agency Catalog</Badge>
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
           Selected <span className="text-gradient">Agency Works.</span>
         </h1>

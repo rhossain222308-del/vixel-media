@@ -10,8 +10,7 @@ import {
   ArrowRight, 
   Film, 
   Wrench, 
-  Briefcase,
-  AlertCircle
+  Briefcase
 } from 'lucide-react';
 import { YoutubeIcon, InstagramIcon, LinkedinIcon } from '@/components/ui/SocialIcons';
 import { Badge } from '@/components/ui/Badge';
@@ -49,17 +48,6 @@ export const PortfolioDetailView: React.FC<PortfolioDetailViewProps> = ({
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Sample Profile Staging Notice Banner */}
-        <div className="mb-8 p-4 rounded-2xl bg-amber-950/30 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
-            <span className="text-xs text-amber-200 leading-tight">
-              <strong>Staged Co-Founder Portfolio:</strong> This profile uses sample metadata. In Phase 2, co-founders will log in via Supabase to edit their portfolio, upload new cuts, and manage projects.
-            </span>
-          </div>
-          <Badge variant="sample" size="sm">Staged Profile</Badge>
-        </div>
-
         {/* Profile Hero Header */}
         <div className="relative rounded-3xl overflow-hidden bg-[#14141B] border border-white/10 shadow-2xl">
           {/* Cover photo */}

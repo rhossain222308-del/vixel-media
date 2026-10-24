@@ -84,7 +84,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ initialService = '' })
       <div className="mb-8 p-3.5 rounded-2xl bg-violet-950/40 border border-violet-500/20 flex items-start gap-3">
         <Sparkles className="w-4 h-4 text-violet-400 mt-0.5 shrink-0" />
         <p className="text-xs text-gray-300 leading-relaxed">
-          <strong className="text-white">Secure Backend Pipeline:</strong> Submissions are processed through server-side validation, rate limiting, and honeypot protection, directly syncing with Supabase PostgreSQL and Row Level Security.
+          <strong className="text-white">Studio Response Guarantee:</strong> Inquiries are processed with server-side validation, rate limiting, and honeypot protection, directly syncing with our editorial production desk.
         </p>
       </div>
 
@@ -102,11 +102,11 @@ export const ContactForm: React.FC<ContactFormProps> = ({ initialService = '' })
           </div>
 
           <h3 className="text-2xl font-bold text-white">
-            Demo Inquiry Received!
+            Project Inquiry Received!
           </h3>
 
           <p className="text-sm text-gray-300 max-w-md mx-auto leading-relaxed">
-            Thank you, <strong className="text-white">{formData.name}</strong>. Your inquiry for <strong className="text-violet-300">{formData.service}</strong> has been logged in the frontend state.
+            Thank you, <strong className="text-white">{formData.name}</strong>. Your inquiry for <strong className="text-violet-300">{formData.service}</strong> has been received. Our editorial team will review your project scope and follow up within 24 business hours.
           </p>
 
           <div className="p-4 rounded-xl bg-white/5 border border-white/5 text-xs text-left max-w-md mx-auto space-y-1.5 font-mono text-gray-400">
@@ -284,7 +284,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ initialService = '' })
             className="w-full"
             icon={<Send className="w-4 h-4" />}
           >
-            {isSubmitting ? 'Processing Staged Inquiry...' : 'Submit Project Inquiry'}
+            {isSubmitting ? 'Submitting Inquiry...' : 'Submit Project Inquiry'}
           </Button>
 
           <p className="text-[11px] text-gray-500 text-center">

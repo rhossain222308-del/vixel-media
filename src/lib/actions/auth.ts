@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { redirect } from 'next/navigation';
 
+import { sanitizeRedirectUrl } from '@/lib/security';
+
 export interface AuthState {
   error?: string;
   success?: boolean;
@@ -20,7 +22,8 @@ export async function loginAction(
 ): Promise<AuthState> {
   const email = (formData.get('email') as string)?.trim();
   const password = formData.get('password') as string;
-  const returnTo = (formData.get('returnTo') as string) || '/dashboard';
+  const rawReturnTo = (formData.get('returnTo') as string) || '/dashboard';
+  const returnTo = sanitizeRedirectUrl(rawReturnTo);
 
   if (!email || !password) {
     return { error: 'Please enter both your founder email and password.' };

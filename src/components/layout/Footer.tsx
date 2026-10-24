@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { 
   Film, 
   Mail, 
@@ -12,6 +13,12 @@ import { YoutubeIcon, InstagramIcon, TwitterIcon, LinkedinIcon } from '../ui/Soc
 import { Badge } from '../ui/Badge';
 
 export const Footer: React.FC = () => {
+  const pathname = usePathname();
+
+  if (pathname.startsWith('/dashboard')) {
+    return null;
+  }
+
   return (
     <footer className="relative bg-[#09090C] border-t border-white/10 pt-16 pb-12 overflow-hidden">
       {/* Background ambient glow */}

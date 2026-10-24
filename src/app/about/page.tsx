@@ -77,7 +77,7 @@ export default async function AboutPage() {
               Our Story
             </span>
             <span className="text-xs text-gray-500">•</span>
-            <Badge variant="sample" size="sm">Editable Staged Story</Badge>
+            <Badge variant="purple" size="sm">Founding Chronicle</Badge>
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">

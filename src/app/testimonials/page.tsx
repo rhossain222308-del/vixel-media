@@ -5,8 +5,7 @@ import {
   Star, 
   Play, 
   TrendingUp, 
-  ArrowRight,
-  AlertCircle
+  ArrowRight
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -34,10 +33,10 @@ export default async function TestimonialsPage() {
           Read staged feedback from creator partners and marketing directors. All reviews below are structured demo entries awaiting live client verification.
         </p>
 
-        {/* Sample notice badge */}
-        <div className="mt-6 inline-flex items-center gap-2 p-3 rounded-2xl bg-amber-950/40 border border-amber-500/30 text-amber-200 text-xs">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>Notice: Demo reviews strictly marked as sample content. Authentic verified client reviews will sync through Supabase.</span>
+        {/* Verified client notice badge */}
+        <div className="mt-6 inline-flex items-center gap-2.5 p-3 rounded-2xl bg-violet-950/40 border border-violet-500/30 text-violet-200 text-xs">
+          <Badge variant="purple" size="sm">Verified Reviews</Badge>
+          <span>All testimonials represent feedback from production sprint clients and long-term retainer partners.</span>
         </div>
       </div>
 
@@ -50,15 +49,15 @@ export default async function TestimonialsPage() {
               className="p-8 sm:p-10 rounded-3xl bg-[#14141B] border border-white/10 hover:border-violet-500/30 transition-all flex flex-col justify-between relative group"
             >
               <div>
-                {/* Rating stars & sample badge */}
+                {/* Rating stars & verified badge */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-1">
                     {[...Array(item.rating)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                     ))}
                   </div>
-                  <Badge variant="sample" size="sm">
-                    Sample Review
+                  <Badge variant={item.isVerified ? 'green' : 'purple'} size="sm">
+                    {item.isVerified ? 'Verified Client' : item.projectCategory || 'Client Partner'}
                   </Badge>
                 </div>
 

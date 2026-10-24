@@ -43,7 +43,7 @@ export default async function DashboardPortfolioPage() {
   // Offline / Demo fallback: Map sample projects for Alex Vance
   const staticIso = '2026-10-15T12:00:00.000Z';
   const mockProjects: PortfolioProjectRow[] = sampleProjects
-    .filter((p) => p.founderId === 'alex-vance')
+    .filter((p) => p.founderId === 'founder-1' || p.founderId === 'alex-vance')
     .map((p) => ({
       id: p.id,
       owner_id: 'demo-founder-1',
